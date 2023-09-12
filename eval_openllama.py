@@ -1,6 +1,6 @@
 from transformers import (
     AutoTokenizer,
-    AutoModel
+    AutoModelForCausalLM
 )
 from core import filter_code, run_eval, fix_indents
 import os
@@ -13,7 +13,7 @@ TOKEN = ""
 
 @torch.inference_mode()
 def generate_batch_completion(
-    model: AutoModel, tokenizer: AutoTokenizer, prompt, batch_size
+    model: AutoModelForCausalLM, tokenizer: AutoTokenizer, prompt, batch_size
 ) -> list[str]:
     input_batch = [prompt for _ in range(batch_size)]
     inputs = tokenizer(input_batch, return_tensors="pt").to(model.device)
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     )
 
     model = torch.compile(
-        AutoModel.from_pretrained(
+        AutoModelForCausalLM.from_pretrained(
             "microsoft/phi-1_5",
             torch_dtype=torch.bfloat16,
         )
