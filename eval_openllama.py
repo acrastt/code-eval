@@ -47,12 +47,12 @@ if __name__ == "__main__":
     os.makedirs("results/openllama", exist_ok=True)
 
     tokenizer = LlamaTokenizer.from_pretrained(
-        "acrastt/Marx-3B-V2",
+        "microsoft/phi-1_5",
     )
 
     model = torch.compile(
         LlamaForCausalLM.from_pretrained(
-            "acrastt/Marx-3B-V2",
+            "microsoft/phi-1_5",
             torch_dtype=torch.bfloat16,
         )
         .eval()
