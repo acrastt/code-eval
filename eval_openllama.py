@@ -1,8 +1,6 @@
 from transformers import (
-    LlamaTokenizer,
-    LlamaForCausalLM,
-    PreTrainedModel,
-    PreTrainedTokenizer,
+    AutoTokenizer,
+    AutoModel
 )
 from core import filter_code, run_eval, fix_indents
 import os
@@ -15,7 +13,7 @@ TOKEN = ""
 
 @torch.inference_mode()
 def generate_batch_completion(
-    model: PreTrainedModel, tokenizer: PreTrainedTokenizer, prompt, batch_size
+    model: AutoModel, tokenizer: AutoTokenizer, prompt, batch_size
 ) -> list[str]:
     input_batch = [prompt for _ in range(batch_size)]
     inputs = tokenizer(input_batch, return_tensors="pt").to(model.device)
@@ -46,12 +44,12 @@ if __name__ == "__main__":
     out_path = "results/openllama/eval.jsonl"
     os.makedirs("results/openllama", exist_ok=True)
 
-    tokenizer = LlamaTokenizer.from_pretrained(
+    tokenizer = AutoTokenizer.from_pretrained(
         "microsoft/phi-1_5",
     )
 
     model = torch.compile(
-        LlamaForCausalLM.from_pretrained(
+        AutoModel.from_pretrained(
             "microsoft/phi-1_5",
             torch_dtype=torch.bfloat16,
         )
